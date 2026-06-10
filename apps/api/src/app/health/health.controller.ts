@@ -1,47 +1,45 @@
 import { Controller, Get } from '@nestjs/common';
 import { type ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import {
-  HealthCheck,
-  type HealthCheckService,
-  type HealthCheckResult,
-  type HealthIndicatorResult,
-} from '@nestjs/terminus';
 
 @ApiTags('health')
 @Controller('health')
 export class HealthController {
-  constructor(
-    private readonly health: HealthCheckService,
-    private readonly config: ConfigService,
-  ) {}
+  constructor(private readonly config: ConfigService) {}
 
-  private async pingUrl(name: string, url: string): Promise<HealthIndicatorResult> {
+  private async ping(
+    name: string,
+    url: string,
+  ): Promise<{ name: string; status: 'up' | 'down'; message?: string }> {
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 3000);
-      const res = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeout);
-      if (res.ok || res.status < 500) {
-        return { [name]: { status: 'up' } };
-      }
-      return { [name]: { status: 'down', message: `HTTP ${res.status}` } };
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 3000);
+      await fetch(url, { signal: ctrl.signal });
+      clearTimeout(t);
+      return { name, status: 'up' };
     } catch {
-      return { [name]: { status: 'down', message: 'unreachable' } };
+      return { name, status: 'down', message: 'unreachable' };
     }
   }
 
   @Get()
-  @HealthCheck()
-  @ApiOperation({ summary: 'Health check' })
-  check(): Promise<HealthCheckResult> {
+  @ApiOperation({ summary: 'Health check with external services' })
+  async check() {
     const ollamaHost = this.config.get<string>('ollama.host');
     const qdrantUrl = this.config.get<string>('qdrant.url');
 
-    return this.health.check([
-      () => this.pingUrl('ollama', `${ollamaHost}/api/version`),
-      () => this.pingUrl('qdrant', `${qdrantUrl}/healthz`),
+    const [ollama, qdrant] = await Promise.all([
+      this.ping('ollama', `${ollamaHost}/api/version`),
+      this.ping('qdrant', `${qdrantUrl}/healthz`),
     ]);
+
+    const allUp = ollama.status === 'up' && qdrant.status === 'up';
+
+    return {
+      status: allUp ? 'ok' : 'degraded',
+      timestamp: new Date().toISOString(),
+      services: { ollama, qdrant },
+    };
   }
 
   @Get('live')

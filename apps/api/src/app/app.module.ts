@@ -10,11 +10,11 @@ import {
 } from '@askhub-ai-rag-demo/shared-config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TerminusModule } from '@nestjs/terminus';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HealthController } from './health/health.controller';
+import { AuthModule } from './auth/auth.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -32,9 +32,10 @@ import { HealthController } from './health/health.controller';
         otelConfig,
       ],
     }),
-    TerminusModule,
+    HealthModule,
+    AuthModule,
   ],
-  controllers: [AppController, HealthController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
