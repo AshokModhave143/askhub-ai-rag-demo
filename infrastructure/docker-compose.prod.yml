@@ -1,0 +1,23 @@
+name: askhub-ai
+
+services:
+  qdrant:
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  ollama:
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  langfuse:
+    restart: always
+    environment:
+      NODE_ENV: production

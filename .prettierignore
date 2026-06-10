@@ -1,5 +1,17 @@
-# Add files here to ignore them from prettier formatting
-/dist
-/coverage
+# Build outputs
+**/dist
+**/build
+**/.next
+**/out-tsc
+**/coverage
+
+# Nx
 /.nx/cache
 /.nx/workspace-data
+
+# Deps
+**/node_modules
+pnpm-lock.yaml
+
+# Misc
+**/.swc

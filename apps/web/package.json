@@ -1,0 +1,15 @@
+{
+  "name": "@askhub-ai-rag-demo/web",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "tags": [
+      "scope:web",
+      "type:app"
+    ]
+  },
+  "dependencies": {
+    "@next/eslint-plugin-next": "^16.2.9",
+    "@nx/next": "20.8.4"
+  }
+}

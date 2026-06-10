@@ -1,0 +1,25 @@
+{
+  "name": "@askhub-ai-rag-demo/api-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@askhub-ai-rag-demo/api"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/api-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@askhub-ai-rag-demo/api:build"
+        ]
+      }
+    }
+  }
+}

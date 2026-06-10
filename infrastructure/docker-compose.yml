@@ -1,0 +1,130 @@
+name: askhub-ai
+
+networks:
+  askhub-net:
+    driver: bridge
+
+volumes:
+  qdrant_data:
+  ollama_models:
+  langfuse_pg:
+  uploads:
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    container_name: askhub-qdrant
+    restart: unless-stopped
+    networks: [askhub-net]
+    ports:
+      - "${QDRANT_HTTP_PORT:-6333}:6333"
+      - "${QDRANT_GRPC_PORT:-6334}:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY:-}
+      QDRANT__LOG_LEVEL: INFO
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  ollama:
+    image: ollama/ollama:0.6.8
+    container_name: askhub-ollama
+    restart: unless-stopped
+    networks: [askhub-net]
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    environment:
+      OLLAMA_KEEP_ALIVE: ${OLLAMA_KEEP_ALIVE:-30m}
+      OLLAMA_HOST: 0.0.0.0
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    # ─── Uncomment for NVIDIA GPU ─────────────────────────
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  ollama-init:
+    image: curlimages/curl:8.10.1
+    container_name: askhub-ollama-init
+    networks: [askhub-net]
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      OLLAMA_MODELS: ${OLLAMA_MODELS:-qwen3:4b,qwen3:8b,nomic-embed-text}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        echo "[ollama-init] pulling: $$OLLAMA_MODELS"
+        IFS=','
+        for m in $$OLLAMA_MODELS; do
+          echo "[ollama-init] >>> $$m"
+          curl -fsS -X POST "$$OLLAMA_HOST/api/pull" \
+            -H 'Content-Type: application/json' \
+            -d "{\"name\":\"$$m\",\"stream\":false}" \
+            -o /dev/null -w "  status=%{http_code}\n"
+        done
+        echo "[ollama-init] done"
+    restart: "no"
+
+  langfuse-postgres:
+    image: postgres:16-alpine
+    container_name: askhub-langfuse-pg
+    restart: unless-stopped
+    networks: [askhub-net]
+    ports:
+      - "${LANGFUSE_PG_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${LANGFUSE_PG_USER:-langfuse}
+      POSTGRES_PASSWORD: ${LANGFUSE_PG_PASSWORD:-langfuse}
+      POSTGRES_DB: ${LANGFUSE_PG_DB:-langfuse}
+    volumes:
+      - langfuse_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  langfuse:
+    image: langfuse/langfuse:2
+    container_name: askhub-langfuse
+    restart: unless-stopped
+    networks: [askhub-net]
+    depends_on:
+      langfuse-postgres:
+        condition: service_healthy
+    ports:
+      - "${LANGFUSE_PORT:-3100}:3000"
+    environment:
+      DATABASE_URL: postgresql://${LANGFUSE_PG_USER:-langfuse}:${LANGFUSE_PG_PASSWORD:-langfuse}@langfuse-postgres:5432/${LANGFUSE_PG_DB:-langfuse}
+      NEXTAUTH_URL: http://localhost:${LANGFUSE_PORT:-3100}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      SALT: ${LANGFUSE_SALT}
+      ENCRYPTION_KEY: ${LANGFUSE_ENCRYPTION_KEY}
+      TELEMETRY_ENABLED: "false"
+      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/public/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s

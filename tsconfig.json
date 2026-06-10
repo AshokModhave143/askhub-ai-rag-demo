@@ -2,5 +2,60 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "./apps/web-e2e"
+    },
+    {
+      "path": "./apps/web"
+    },
+    {
+      "path": "./apps/api-e2e"
+    },
+    {
+      "path": "./apps/api"
+    },
+    {
+      "path": "./libs/core-domain"
+    },
+    {
+      "path": "./libs/core-ports"
+    },
+    {
+      "path": "./libs/shared-config"
+    },
+    {
+      "path": "./libs/shared-dto"
+    },
+    {
+      "path": "./libs/shared-types"
+    },
+    {
+      "path": "./libs/observability"
+    },
+    {
+      "path": "./libs/rag-pipeline"
+    },
+    {
+      "path": "./libs/adapter-llm-ollama"
+    },
+    {
+      "path": "./libs/adapter-vector-qdrant"
+    },
+    {
+      "path": "./libs/adapter-storage-fs"
+    },
+    {
+      "path": "./libs/adapter-storage-azure-blob"
+    },
+    {
+      "path": "./libs/adapter-auth-jwt"
+    },
+    {
+      "path": "./libs/adapter-auth-entra"
+    },
+    {
+      "path": "./libs/ui-kit"
+    }
+  ]
 }

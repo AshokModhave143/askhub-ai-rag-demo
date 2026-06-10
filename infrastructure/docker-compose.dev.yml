@@ -1,0 +1,14 @@
+name: askhub-ai
+
+services:
+  qdrant:
+    environment:
+      QDRANT__LOG_LEVEL: DEBUG
+
+  ollama:
+    environment:
+      OLLAMA_DEBUG: "1"
+
+  langfuse:
+    environment:
+      NODE_ENV: development

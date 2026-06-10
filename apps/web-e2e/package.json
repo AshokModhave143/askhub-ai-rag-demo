@@ -1,0 +1,10 @@
+{
+  "name": "@askhub-ai-rag-demo/web-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@askhub-ai-rag-demo/web"
+    ]
+  }
+}
