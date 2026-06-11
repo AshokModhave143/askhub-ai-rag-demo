@@ -14,7 +14,10 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
+import { DocumentModule } from './documents/document.module';
 import { HealthModule } from './health/health.module';
+import { RagModule } from './rag/rag.module';
 
 @Module({
   imports: [
@@ -34,6 +37,9 @@ import { HealthModule } from './health/health.module';
     }),
     HealthModule,
     AuthModule,
+    RagModule,
+    DocumentModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

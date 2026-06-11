@@ -3,13 +3,14 @@ import { type ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { type JwtPayload } from '../auth.types';
 import { type UserStore } from '../user.store';
+
+import type { JwtPayload } from '../auth.types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private readonly config: ConfigService,
+    config: ConfigService,
     private readonly userStore: UserStore,
   ) {
     super({

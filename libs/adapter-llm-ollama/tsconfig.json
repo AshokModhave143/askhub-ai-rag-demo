@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../core-ports"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ]

@@ -2,14 +2,65 @@
   "name": "@askhub-ai-rag-demo/web",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000"
+  },
   "nx": {
+    "targets": {
+      "serve": {
+        "executor": "@nx/next:server",
+        "defaultConfiguration": "development",
+        "options": {
+          "buildTarget": "@askhub-ai-rag-demo/web:build",
+          "dev": true
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "@askhub-ai-rag-demo/web:build:development",
+            "dev": true
+          },
+          "production": {
+            "buildTarget": "@askhub-ai-rag-demo/web:build:production",
+            "dev": false
+          }
+        }
+      },
+      "build": {
+        "executor": "@nx/next:build",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "outputPath": "dist/apps/web"
+        },
+        "configurations": {
+          "development": {
+            "outputPath": "dist/apps/web"
+          },
+          "production": {
+            "outputPath": "dist/apps/web"
+          }
+        }
+      }
+    },
     "tags": [
       "scope:web",
       "type:app"
     ]
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.1.1",
+    "@mui/material": "^9.1.1",
     "@next/eslint-plugin-next": "^16.2.9",
-    "@nx/next": "20.8.4"
+    "@nx/next": "20.8.4",
+    "@tanstack/react-query": "^5.101.0",
+    "axios": "^1.6.0",
+    "react-hook-form": "^7.78.0",
+    "zustand": "^5.0.14"
   }
 }

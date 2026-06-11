@@ -10,5 +10,12 @@
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],
-  "references": []
+  "references": [
+    {
+      "path": "../core-ports/tsconfig.lib.json"
+    },
+    {
+      "path": "../core-domain/tsconfig.lib.json"
+    }
+  ]
 }

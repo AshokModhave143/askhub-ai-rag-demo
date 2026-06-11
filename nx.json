@@ -7,7 +7,7 @@
   },
   "plugins": [
     {
-      "plugin": "@nx/eslint/plugin",
+      "plugin": "@nx/eslint/src/plugins/plugin",
       "options": {
         "targetName": "lint"
       }

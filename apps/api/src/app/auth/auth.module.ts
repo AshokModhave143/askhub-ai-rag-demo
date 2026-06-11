@@ -15,7 +15,10 @@ import { UserStore } from './user.store';
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('jwt.secret'),
-        signOptions: { expiresIn: config.get<string>('jwt.expiresIn') ?? '12h' },
+        signOptions: {
+          expiresIn: (config.get<string>('jwt.expiresIn') ??
+            '12h') as `${number}${'s' | 'm' | 'h' | 'd'}`,
+        },
       }),
       inject: [ConfigService],
     }),

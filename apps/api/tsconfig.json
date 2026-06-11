@@ -7,6 +7,21 @@
       "path": "../../libs/shared-config"
     },
     {
+      "path": "../../libs/rag-pipeline"
+    },
+    {
+      "path": "../../libs/core-ports"
+    },
+    {
+      "path": "../../libs/core-domain"
+    },
+    {
+      "path": "../../libs/adapter-vector-qdrant"
+    },
+    {
+      "path": "../../libs/adapter-llm-ollama"
+    },
+    {
       "path": "./tsconfig.app.json"
     }
   ]

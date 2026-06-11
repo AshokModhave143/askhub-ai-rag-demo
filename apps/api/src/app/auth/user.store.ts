@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 
 import { Injectable } from '@nestjs/common';
 
-import { type User } from '../auth.types';
+import type { User } from './auth.types';
 
 /**
  * In-memory user store for POC.

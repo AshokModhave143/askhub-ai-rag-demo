@@ -14,7 +14,15 @@ export interface JwtPayload {
   role: string;
 }
 
-export interface AuthTokens {
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+}
+
+export interface AuthResponse {
   accessToken: string;
   expiresIn: string;
+  user: AuthUser;
 }

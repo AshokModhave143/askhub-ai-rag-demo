@@ -4,6 +4,8 @@
     "outDir": "dist",
     "types": ["node"],
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2021",
@@ -18,6 +20,21 @@
   "references": [
     {
       "path": "../../libs/shared-config/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/rag-pipeline/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/core-ports/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/core-domain/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/adapter-vector-qdrant/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/adapter-llm-ollama/tsconfig.lib.json"
     }
   ]
 }

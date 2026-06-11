@@ -3,9 +3,10 @@ import { type ConfigService } from '@nestjs/config';
 import { type JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 
-import { type AuthTokens, type JwtPayload } from './auth.types';
 import { type RegisterDto, type LoginDto } from './dto/auth.dto';
 import { type UserStore } from './user.store';
+
+import type { AuthResponse, JwtPayload } from './auth.types';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
     private readonly config: ConfigService,
   ) {}
 
-  async register(dto: RegisterDto): Promise<AuthTokens> {
+  async register(dto: RegisterDto): Promise<AuthResponse> {
     const existing = this.userStore.findByEmail(dto.email);
     if (existing) {
       throw new ConflictException('Email already registered');
@@ -36,7 +37,7 @@ export class AuthService {
     return this.generateTokens(user.id, user.email, user.name, user.role);
   }
 
-  async login(dto: LoginDto): Promise<AuthTokens> {
+  async login(dto: LoginDto): Promise<AuthResponse> {
     const user = this.userStore.findByEmail(dto.email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -50,10 +51,10 @@ export class AuthService {
     return this.generateTokens(user.id, user.email, user.name, user.role);
   }
 
-  private generateTokens(id: string, email: string, name: string, role: string): AuthTokens {
+  private generateTokens(id: string, email: string, name: string, role: string): AuthResponse {
     const expiresIn = this.config.get<string>('jwt.expiresIn') ?? '12h';
     const payload: JwtPayload = { sub: id, email, name, role };
     const accessToken = this.jwtService.sign(payload);
-    return { accessToken, expiresIn };
+    return { accessToken, expiresIn, user: { id, email, name, role } };
   }
 }
