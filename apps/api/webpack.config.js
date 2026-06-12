@@ -1,7 +1,6 @@
 const { join } = require('path');
 
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
-const webpack = require('webpack');
 
 const optionalModules = [
   '@mikro-orm/core',

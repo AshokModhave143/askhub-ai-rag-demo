@@ -8,14 +8,15 @@
         "executor": "nx:run-commands",
         "options": {
           "command": "webpack-cli build",
+          "cwd": "{projectRoot}",
           "args": [
-            "node-env=production"
+            "--node-env=production"
           ]
         },
         "configurations": {
           "development": {
             "args": [
-              "node-env=development"
+              "--node-env=development"
             ]
           }
         }
@@ -52,16 +53,17 @@
     "@askhub-ai-rag-demo/core-ports": "workspace:^",
     "@askhub-ai-rag-demo/rag-pipeline": "workspace:^",
     "@askhub-ai-rag-demo/shared-config": "workspace:^",
+    "reflect-metadata": "^0.2.2",
     "@nestjs/axios": "^4.0.1",
-    "@nestjs/common": "^10.0.2",
+    "@nestjs/common": "^11.0.11",
     "@nestjs/config": "^4.0.4",
-    "@nestjs/core": "^10.0.2",
+    "@nestjs/core": "^11.0.11",
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/passport": "^11.0.5",
-    "@nestjs/platform-express": "^10.0.2",
+    "@nestjs/platform-express": "^11.0.11",
     "@nestjs/swagger": "^11.4.4",
     "@nestjs/terminus": "^11.1.1",
-    "@nestjs/testing": "^10.0.2",
+    "@nestjs/testing": "^11.0.11",
     "@qdrant/js-client-rest": "^1.18.0",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
