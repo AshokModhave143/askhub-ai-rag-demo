@@ -2,12 +2,16 @@ import type { ParsedDocument, ParsedPage } from '@askhub-ai-rag-demo/core-domain
 import type { IDocumentParser } from '@askhub-ai-rag-demo/core-ports';
 
 // Lazy imports to avoid bundling in environments that don't need them
-async function getPdfParse() {
-  const mod = require('pdf-parse');
-  return (mod.default ?? mod) as (
+async function getPdfParse(): Promise<
+  (
     buffer: Buffer,
     options?: { pagerender?: (pageData: unknown) => string },
-  ) => Promise<{ text: string; numpages: number }>;
+  ) => Promise<{ text: string; numpages: number }>
+> {
+  const mod = require('pdf-parse');
+  const fn = mod.default ?? mod;
+  if (typeof fn !== 'function') throw new Error('pdf-parse did not export a function');
+  return fn;
 }
 
 async function getMammoth() {
@@ -55,36 +59,27 @@ export class DocumentParserService implements IDocumentParser {
   private async parsePdf(buffer: Buffer): Promise<ParsedDocument> {
     const pdfParse = await getPdfParse();
     const pages: ParsedPage[] = [];
-
     let currentPage = 0;
+
     const pdfData = await pdfParse(buffer, {
       pagerender: (pageData: unknown) => {
         currentPage++;
-        const pageDataTyped = pageData as {
-          getTextContent: () => Promise<{
-            items: Array<{ str: string; hasEOL?: boolean }>;
-          }>;
+        const pd = pageData as {
+          getTextContent: () => Promise<{ items: Array<{ str: string; hasEOL?: boolean }> }>;
         };
-        void pageDataTyped
-          .getTextContent()
-          .then((textContent: { items: Array<{ str: string; hasEOL?: boolean }> }) => {
-            const pageText = textContent.items
-              .map((item) => item.str + (item.hasEOL ? '\n' : ' '))
-              .join('');
-            pages.push({ pageNumber: currentPage, text: pageText.trim() });
-          });
+        void pd.getTextContent().then((tc) => {
+          const text = tc.items
+            .map((i) => i.str + (i.hasEOL ? '\n' : ' '))
+            .join('')
+            .trim();
+          pages.push({ pageNumber: currentPage, text });
+        });
         return '';
       },
     });
 
-    // If page-level parsing didn't capture pages, fall back to full text
     const finalPages = pages.length > 0 ? pages : [{ pageNumber: 1, text: pdfData.text }];
-
-    return {
-      text: pdfData.text,
-      pageCount: pdfData.numpages,
-      pages: finalPages,
-    };
+    return { text: pdfData.text, pageCount: pdfData.numpages, pages: finalPages };
   }
 
   private async parseDocx(buffer: Buffer): Promise<ParsedDocument> {

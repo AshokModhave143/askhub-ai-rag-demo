@@ -2,7 +2,7 @@ import { OllamaAdapter } from '@askhub-ai-rag-demo/adapter-llm-ollama';
 import { QdrantVectorStore } from '@askhub-ai-rag-demo/adapter-vector-qdrant';
 import { RagPipeline, DocumentParserService } from '@askhub-ai-rag-demo/rag-pipeline';
 import { Injectable } from '@nestjs/common';
-import { type ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RagService {

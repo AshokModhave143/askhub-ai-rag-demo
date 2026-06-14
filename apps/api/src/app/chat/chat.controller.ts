@@ -14,8 +14,8 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagg
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-import { type ChatService } from './chat.service';
-import { type SendMessageDto } from './dto/send-message.dto';
+import { ChatService } from './chat.service';
+import { SendMessageDto } from './dto/send-message.dto';
 
 import type { AuthUser } from '../auth/auth.types';
 

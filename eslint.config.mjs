@@ -115,5 +115,13 @@ export default [
       '@nx/dependency-checks': 'off',
     },
   },
+  {
+    // NestJS DI reads reflect-metadata at runtime. `import type` erases the
+    // constructor reference, causing NestJS to resolve dependencies as Object.
+    files: ['apps/api/src/**/*.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'off',
+    },
+  },
   prettier,
 ];

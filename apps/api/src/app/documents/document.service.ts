@@ -2,13 +2,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
-import { type ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
-import { type RagService } from '../rag/rag.service';
+import { RagService } from '../rag/rag.service';
 
-import { type DocumentStore } from './document.store';
-import { type DocumentMetadata } from './document.types';
-import { type FsStorageAdapter } from './storage/fs-storage.adapter';
+import { DocumentStore } from './document.store';
+import { DocumentMetadata } from './document.types';
+import { FsStorageAdapter } from './storage/fs-storage.adapter';
 
 const ALLOWED_MIME_TYPES = new Set([
   'application/pdf',

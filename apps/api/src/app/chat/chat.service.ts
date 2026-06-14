@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
-import { type RagService } from '../rag/rag.service';
+import { RagService } from '../rag/rag.service';
 
-import { type ChatSessionStore } from './chat.store';
+import { ChatSessionStore } from './chat.store';
 
 import type { SendMessageDto } from './dto/send-message.dto';
 import type { ChatSession, ConversationMessage } from '@askhub-ai-rag-demo/core-domain';

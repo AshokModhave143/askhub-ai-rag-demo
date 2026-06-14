@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 
 import { Injectable } from '@nestjs/common';
 
-import { type DocumentMetadata, type DocumentStatus } from './document.types.js';
+import { DocumentMetadata, type DocumentStatus } from './document.types.js';
 
 /**
  * In-memory document registry.

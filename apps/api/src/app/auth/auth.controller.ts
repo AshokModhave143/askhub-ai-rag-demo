@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 
-import { type AuthService } from './auth.service';
-import { type LoginDto, type RegisterDto } from './dto/auth.dto';
+import { AuthService } from './auth.service';
+import { LoginDto, type RegisterDto } from './dto/auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('auth')

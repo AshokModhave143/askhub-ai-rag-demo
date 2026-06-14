@@ -1,10 +1,10 @@
 import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { type ConfigService } from '@nestjs/config';
-import { type JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 
-import { type RegisterDto, type LoginDto } from './dto/auth.dto';
-import { type UserStore } from './user.store';
+import { RegisterDto, type LoginDto } from './dto/auth.dto';
+import { UserStore } from './user.store';
 
 import type { AuthResponse, JwtPayload } from './auth.types';
 

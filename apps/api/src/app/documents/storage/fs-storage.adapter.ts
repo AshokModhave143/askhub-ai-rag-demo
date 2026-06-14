@@ -2,9 +2,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { type ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
-import { type DocumentMetadata } from '../document.types';
+import { DocumentMetadata } from '../document.types';
 
 /**
  * Filesystem-based storage adapter for uploaded documents.

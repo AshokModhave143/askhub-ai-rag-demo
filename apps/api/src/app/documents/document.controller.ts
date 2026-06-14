@@ -28,7 +28,7 @@ import { diskStorage } from 'multer';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-import { type DocumentService } from './document.service';
+import { DocumentService } from './document.service';
 
 interface AuthRequest extends Request {
   user: { id: string; email: string; name: string; role: string };
